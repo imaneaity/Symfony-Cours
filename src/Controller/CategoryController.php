@@ -5,37 +5,44 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Form\AdminCategoryType;
+
+
 use App\Repository\CategoryRepository;
-
-
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends AbstractController
 {
     #[Route('/admin/categories/nouveau', name: 'app_admin_category_create')]
     public function create(Request $request, CategoryRepository $repository): Response
     {
-        // Tester si le formulaire a était envoyé
-        if ($request->isMethod('POST')) {
-            // Récupérer les données du formulaire
-            $name = $request->request->get('name');
 
-            // Créer l'categorie à partir des données du formulaire
-            $category = new Category();
-            $category->setName($name);
+
+        $form = $this->createForm(AdminCategoryType::class);
+        // On remplie le formulaire avec les données envoyé par l'utilisateur
+        $form->handleRequest($request);
+
+        // Tester si le formulaire est envoyé et est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // récupération de l'auteur
+            $category = $form->getData();
 
             // enregistrer l'categorie grâce au répository
             $repository->add($category, true);
 
             // Rediriger l'utilisateur vers la liste des categories
-            return $this->redirectToRoute('app_admin_category_list');
+            return $this->redirectToRoute('app_admin_category_list', [
+                
+            ]);
         }
 
         // afficher le formulaire (la page twig)
-        return $this->render('category/create.html.twig');
+        return $this->render('category/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/admin/categories', name: 'app_admin_category_list')]

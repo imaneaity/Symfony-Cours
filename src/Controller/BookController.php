@@ -50,7 +50,7 @@ class BookController extends AbstractController
         $books = $repository->findAll();
 
         // Afficher la page html de la liste des livres
-        return $this->render('admin/book/list.html.twig', [
+        return $this->render('book/list.html.twig', [
             'books' => $books,
         ]);
     }
@@ -84,7 +84,7 @@ class BookController extends AbstractController
         }
 
         // Afficher le formulaire d'édition d'un livre
-        return $this->render('admin/book/update.html.twig', [
+        return $this->render('book/update.html.twig', [
             'book' => $book,
         ]);
     }

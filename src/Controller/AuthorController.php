@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Author;
+use App\Form\AdminAuthorType;
 use App\Repository\AuthorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,34 +14,34 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AuthorController extends AbstractController
 {
-    #[Route('/auteurs/nouveau', name: 'app_admin_author_create')]
+    #[Route('auteurs/nouveau', name: 'app_admin_author_create')]
     public function create(Request $request, AuthorRepository $repository): Response
     {
-        // Tester si le formulaire a était envoyé
-        if ($request->isMethod('POST')) {
-            // Récupérer les données du formulaire
-            $name = $request->request->get('name');
-            $description = $request->request->get('description');
-            $imageUrl = $request->request->get('imageUrl');
+        // Création du formulaire
+        $form = $this->createForm(AdminAuthorType::class);
 
-            // Créer l'auteur à partir des données du formulaire
-            $author = new Author();
-            $author->setName($name);
-            $author->setDescription($description);
-            $author->setImageUrl($imageUrl);
+        // On remplie le formulaire avec les données envoyé par l'utilisateur
+        $form->handleRequest($request);
 
-            // enregistrer l'auteur grâce au répository
+        // Tester si le formulaire est envoyé et est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // récupération de l'auteur
+            $author = $form->getData();
+
+            // enregistrement des données en base de données
             $repository->add($author, true);
 
-            // Rediriger l'utilisateur vers la liste des auteurs
+            // Redirection vers la page de la liste
             return $this->redirectToRoute('app_admin_author_list');
         }
 
-        // afficher le formulaire (la page twig)
-        return $this->render('author/create.html.twig');
+        // Afficher la page
+        return $this->render('author/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
-    #[Route('/admin/auteurs', name: 'app_admin_author_list')]
+    #[Route('auteurs', name: 'app_admin_author_list')]
     public function list(AuthorRepository $repository): Response
     {
         // Récupérer les auteurs depuis la base de donnés

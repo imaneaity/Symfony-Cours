@@ -63,13 +63,16 @@ class CategoryController extends AbstractController
         // récupérer l'categorie à partir de l'id
         $category = $repository->find($id);
 
-        // Tester si le formulaire à était envoyé
-        if ($request->isMethod('POST')) {
-            // Récupérer les données rentré dans le formulaire
-            $name = $request->request->get('name');
+        // Création du formulaire
+        $form = $this->createForm(AdminCategoryType::class, $category);
 
-            // Mettre à jour les informations de l'categorie
-            $category->setName($name);
+        // Remplir le formulaire avec les données de l'utilisateur
+        $form->handleRequest($request);
+
+        // Tester si le formulaire est envoyé et est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // récupération de l'auteur
+            $category = $form->getData();
 
             // Enregistrer l'categorie
             $repository->add($category, true);
@@ -80,6 +83,7 @@ class CategoryController extends AbstractController
 
         // afficher le formulaire de mise à jour de l'categorie
         return $this->render('category/update.html.twig', [
+            'form' => $form->createView(),
             'category' => $category,
         ]);
     }

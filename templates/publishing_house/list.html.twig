@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Liste des maisons d'édition</h1>
+
+    <nav>
+        <a href="{{ path('app_publishing_house_create') }}">Ajouter une maison d'édition</a>
+    </nav>
+
+    {% for publishingHouse in houses %}
+        <div>
+            <p>{{ publishingHouse.name }}</p>
+             <p>{{ publishingHouse.description }}</p>
+            <nav>
+                <a href="{{ path('app_publishing_house_update', {id: publishingHouse.id}) }}">Modifier</a>
+                <a href="{{ path('app_publishing_house_remove', {id: publishingHouse.id}) }}">Supprimer</a>
+            </nav>
+        </div>
+    {% endfor %}
+{% endblock %}

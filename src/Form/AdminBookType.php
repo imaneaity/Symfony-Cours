@@ -2,18 +2,19 @@
 
 namespace App\Form;
 
-use App\Entity\Author;
 use App\Entity\Book;
+use App\Entity\Author;
 use App\Entity\Category;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\PublishingHouse;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AdminBookType extends AbstractType
 {
@@ -52,6 +53,18 @@ class AdminBookType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
+            ->add('publishingHouse', EntityType::class, [
+                'label' => "Choix de la maison d'édition :",
+                'class' => PublishingHouse::class,
+                'required' => false,
+                'choice_label' => 'name',
+                'multiple' => false,
+                // false === select box
+                // true === checkbox
+                'expanded' => false,
+            ])
+
+
             ->add('send', SubmitType::class, [
                 'label' => 'Envoyer',
             ]);

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Author;
 use App\Entity\Category;
+use App\Entity\PublishingHouse;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\Collection;
@@ -51,6 +52,12 @@ class Book
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
      */
     private $category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=PublishingHouse::class, inversedBy="book")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $publishingHouse;
 
     public function __construct()
     {
@@ -144,6 +151,18 @@ class Book
     public function removeCategory(Category $category): self
     {
         $this->category->removeElement($category);
+
+        return $this;
+    }
+
+    public function getPublishingHouse(): ?PublishingHouse
+    {
+        return $this->publishingHouse;
+    }
+
+    public function setPublishingHouse(?PublishingHouse $publishingHouse): self
+    {
+        $this->publishingHouse = $publishingHouse;
 
         return $this;
     }

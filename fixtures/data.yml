@@ -1,0 +1,11 @@
+# fixtures/data.yml
+App\Entity\Category:
+  category1{1..10}:
+
+    name: 'thriller' 
+
+
+App\Entity\Author:
+  aaaa1{1..10}:
+
+    name: 'author' 

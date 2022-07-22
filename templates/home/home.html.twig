@@ -13,6 +13,7 @@
         <nav>
             {% for catego in book.category %}
                 <a href="">{{ catego.name }}</a>
+                <a href="{{ path('app_cat_display', {id: catego.id}) }}">{{ catego.name }}</a>
             {% endfor %}
         </nav>
     </div>

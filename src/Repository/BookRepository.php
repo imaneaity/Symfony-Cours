@@ -52,6 +52,23 @@ class BookRepository extends ServiceEntityRepository
  }
 
 
+
+
+
+ public function findAllByCategory(int $id): array
+ {
+     $qb = $this->createQueryBuilder('book');
+
+     return $qb
+         ->orderBy('book.price', 'DESC')
+         ->leftJoin('book.category', 'category')
+         ->andWhere('category.id = :id')
+         ->setParameter('id', $id)
+         ->setMaxResults(20)
+         ->getQuery()
+         ->getResult();
+ }
+
 //    /**
 //     * @return Book[] Returns an array of Book objects
 //     */

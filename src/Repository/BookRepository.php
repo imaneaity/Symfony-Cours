@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Book;
+use App\DTO\SearchBookCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -52,9 +53,7 @@ class BookRepository extends ServiceEntityRepository
  }
 
 
-
-
-
+ 
  public function findAllByCategory(int $id): array
  {
      $qb = $this->createQueryBuilder('book');
@@ -68,6 +67,48 @@ class BookRepository extends ServiceEntityRepository
          ->getQuery()
          ->getResult();
  }
+
+ public function findByCriteria(SearchBookCriteria $criteria): array
+ {
+     // Création du query builder
+     $qb = $this->createQueryBuilder('book');
+
+     // Filtre les résultat par titre si c'est spécifié
+     if ($criteria->title) {
+         $qb->andWhere('book.title LIKE :title')
+             ->setParameter('title', "%$criteria->title%");
+     }
+
+     // Filtre les résultat par auteurs
+     if (!empty($criteria->authors)) {
+         $qb->leftJoin('book.Author', 'Author')
+             ->andWhere('Author.id IN (:authorIds)')
+             ->setParameter('authorIds', $criteria->authors);
+     }
+
+     // Filtre les résultat par catégories
+     if (!empty($criteria->categories)) {
+         $qb->leftJoin('book.category', 'category')
+             ->andWhere('category.id IN (:categoryIds)')
+             ->setParameter('categoryIds', $criteria->categories);
+     }
+
+     // Filtre par prix minimum
+     if ($criteria->minPrice) {
+         $qb->andWhere('book.price >= :minPrice')
+             ->setParameter('minPrice', $criteria->minPrice);
+     }
+
+     // Filtre par prix maximum
+     if ($criteria->maxPrice) {
+         $qb->andWhere('book.price <= :maxPrice')
+             ->setParameter('maxPrice', $criteria->maxPrice);
+     }
+
+     return $qb->getQuery()->getResult();
+ }
+
+
 
 //    /**
 //     * @return Book[] Returns an array of Book objects

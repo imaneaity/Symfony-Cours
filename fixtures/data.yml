@@ -2,10 +2,30 @@
 App\Entity\Category:
   category1{1..10}:
 
-    name: 'thriller' 
+    name: "<word()>" 
 
 
 App\Entity\Author:
   aaaa1{1..10}:
 
-    name: 'author' 
+    name:  "<name()>"
+    description : 'description'
+    imageUrl : 'url'
+
+App\Entity\PublishingHouse:
+  pub1:
+    name : "house"
+    description : "desc"
+    country : "france"
+    
+
+
+App\Entity\Book:
+  Book{1..10} : 
+    title : "<word()>" 
+    price:  "5.99"
+    description: "<sentence()>"
+    ImageUrl: 'url'
+    Author: "@aaaa15"
+    category: ["@category19"]
+    publishingHouse : "@pub1"

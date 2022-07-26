@@ -15,4 +15,6 @@ class SearchAuthorCriteria
     public ?int $limit = 25;
 
     public ?int $page = 1;
+
+    
 }

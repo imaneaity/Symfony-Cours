@@ -4,8 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Book;
 use App\DTO\SearchBookCriteria;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\PublishingHouse;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Book>
@@ -105,8 +106,26 @@ class BookRepository extends ServiceEntityRepository
              ->setParameter('maxPrice', $criteria->maxPrice);
      }
 
-     return $qb->getQuery()->getResult();
- }
+
+
+      // Filtre par maison d'édition
+      if (!empty($criteria->publishingHouses)) {
+        $qb
+            ->leftJoin('book.publishingHouse', 'PublishingHouse')
+            ->andWhere('PublishingHouse.id IN (:publishingHouses)')
+            ->setParameter('publishingHouses', $criteria->publishingHouses);
+    }
+
+    return $qb
+        ->orderBy("book.$criteria->orderBy", $criteria->direction)
+        ->setMaxResults($criteria->limit)
+        ->setFirstResult(($criteria->page - 1) * $criteria->limit)
+        ->getQuery()
+        ->getResult();
+}
+
+   
+ 
 
 
 

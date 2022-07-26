@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Category;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\DTO\SearchCategoryCriteria;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Category>
@@ -38,6 +39,28 @@ class CategoryRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+
+    public function findByCriteria(SearchCategoryCriteria $criteria): array
+    {
+        // Création du query builder : l'assistant de requête à la base de données
+        $qb = $this->createQueryBuilder('category');
+
+        // On test si une recherche par nom est demandé
+        if ($criteria->name) {
+            // Si oui, alors on filtre les catégories par leurs nom
+            $qb->andWhere('category.name LIKE :name')
+                ->setParameter('name', "%$criteria->name%");
+        }
+
+        return $qb
+            ->orderBy("category.$criteria->orderBy", $criteria->direction)
+            ->setMaxResults($criteria->limit)
+            ->setFirstResult(($criteria->page - 1) * $criteria->limit)
+            ->getQuery()
+            ->getResult();
+    }
+
 
 //    /**
 //     * @return Category[] Returns an array of Category objects

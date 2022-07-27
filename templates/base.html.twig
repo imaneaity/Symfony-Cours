@@ -20,13 +20,22 @@
             <nav>
                 <a href="{{ path('app_home_home')}}">Accueil</a>
               
+              {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_admin_book_list') }}">Les Livres</a>
+                    <a href="{{ path('app_admin_author_list') }}">Les Auteurs</a>
+                    <a href="{{ path('app_admin_category_list') }}">Les Catégories</a>
+                    <a href="{{ path('app_publishing_house_list') }}">Les Maisons d'édition</a>
+                {% endif %}
+
+
+            </nav>
                 {% if app.user %}
                 <nav>
                     <div>Bienvenue {{ app.user.email }}</div>
                 </nav>
                 {% endif %}
 
-            </nav>
+            
 
             <nav>
                 {% if app.user %}

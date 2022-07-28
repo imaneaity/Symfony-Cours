@@ -43,4 +43,30 @@ class BasketController extends AbstractController
     {
         return $this->render('basket/display.html.twig');
     }
+
+
+
+    #[Route('/mon-panier/{id}/supprimer', name: 'app_basket_remove')]
+    public function remove(Book $book, BasketRepository $repository): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // On récupére le panier de l'utilisateur connécté
+        $basket = $user->getBasket();
+
+        // Suppression du livre du panier
+        $basket->removeBook($book);
+
+        // On enregistre la panier
+        $repository->add($basket, true);
+
+        // On redirige vers la page d'affichage du panier
+        return $this->redirectToRoute('app_basket_display');
+    }
+
+
+
+
+
 }

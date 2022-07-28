@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Entity\Author;
+use DateTimeInterface;
 use App\Entity\Category;
 use App\Entity\PublishingHouse;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation\Timestampable;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -58,6 +60,18 @@ class Book
      * @ORM\JoinColumn(nullable=false)
      */
     private $publishingHouse;
+
+    /**
+     * 
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * 
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     public function __construct()
     {
@@ -163,6 +177,30 @@ class Book
     public function setPublishingHouse(?PublishingHouse $publishingHouse): self
     {
         $this->publishingHouse = $publishingHouse;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

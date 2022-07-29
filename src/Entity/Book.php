@@ -75,7 +75,7 @@ class Book
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="books")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $userOrder;
 

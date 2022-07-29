@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Order;
+use App\Entity\Address;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -73,13 +75,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $billingAddress;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="user", orphanRemoval=true)
      */
     private $orders;
 
+   
+
+   
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->basket = new Basket();
+        $this->basket->setUser($this);
     }
 
     public function getId(): ?int
@@ -294,4 +301,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    
+
+  
+   
 }

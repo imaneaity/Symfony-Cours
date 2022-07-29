@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation\Timestampable;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
@@ -20,11 +22,7 @@ class Order
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
+    
 
     /**
      * @ORM\OneToMany(targetEntity=Book::class, mappedBy="userOrder")
@@ -32,7 +30,7 @@ class Order
     private $books;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
 
@@ -40,6 +38,14 @@ class Order
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    
 
     public function __construct()
     {
@@ -51,17 +57,7 @@ class Order
         return $this->id;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection<int, Book>
@@ -116,4 +112,18 @@ class Order
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+   
 }
